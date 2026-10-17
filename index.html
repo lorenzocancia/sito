@@ -177,10 +177,10 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
     min-height: 52px;
-    margin-top: 6px;
-    padding: 14px 18px;
+    padding: 14px 16px;
     background: var(--bianco);
     color: var(--grafite);
     font-family: var(--f-id);
@@ -189,17 +189,46 @@
     letter-spacing: .16em;
     text-transform: uppercase;
     text-decoration: none;
+    white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
     transition: background-color .15s ease;
   }
   .salva svg { flex: none; width: 20px; height: 20px; }
-  .salva:hover, .salva:active { background: var(--archivio); }
-  .nota-salva {
-    margin: 9px 0 0;
-    font-size: 14px;
-    line-height: 1.4;
-    text-align: center;
+  @media (max-width: 359px) {
+    .salva { gap: 8px; padding: 12px 10px; font-size: 12px; letter-spacing: .1em; }
+    .salva svg { width: 18px; height: 18px; }
+    .recapiti .dato { font-size: 15.5px; letter-spacing: .01em; }
   }
+  .salva:hover, .salva:active { background: var(--archivio); }
+  .azioni {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .condividi {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    background: transparent;
+    color: var(--bianco);
+    border: 1px solid var(--bianco);
+    border-radius: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: background-color .15s ease, color .15s ease;
+  }
+  .condividi svg { width: 22px; height: 22px; }
+  .condividi .ico-ok { display: none; }
+  .condividi.ok .ico-share { display: none; }
+  .condividi.ok .ico-ok { display: block; }
+  .condividi:hover, .condividi:active { background: var(--bianco); color: var(--grafite); }
 
   /* 3 · Ambiti di attività: riquadri Carta Archivio */
   .ambiti { padding-top: 48px; padding-bottom: 44px; }
@@ -260,8 +289,7 @@
     .ricevimento { margin-bottom: 0; }
     .nome { font-size: 22px; }
     .recapiti .dato { font-size: 19px; }
-    .salva { margin-top: 18px; }
-    .nota-salva { text-align: left; }
+    .azioni { margin-top: 18px; }
     .ambiti { padding-top: 72px; padding-bottom: 72px; }
     .ambiti ul { grid-template-columns: 1fr 1fr; gap: 16px; }
     .ambiti li { padding: 24px 26px 26px; }
@@ -290,11 +318,17 @@
           <li><a href="tel:+393334774687"><span class="tipo">Telefono</span><span class="dato">+39 333 477 4687</span></a></li>
           <li><a href="mailto:studio@geometracancia.it"><span class="tipo">Email</span><span class="dato">studio@geometracancia.it</span></a></li>
         </ul>
-        <a class="salva" href="lorenzo-cancia.vcf">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M19 7v6M16 10h6"/></svg>
-          Salva contatto
-        </a>
-        <p class="nota-salva">Aggiunge nome, telefono ed email alla rubrica.</p>
+        <div class="azioni">
+          <a class="salva" href="lorenzo-cancia.vcf">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><circle cx="9.5" cy="8" r="3.5"/><path d="M3 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M19 7v6M16 10h6"/></svg>
+            Salva contatto
+          </a>
+          <button class="condividi" type="button" id="condividi" aria-label="Condividi" title="Condividi">
+            <svg class="ico-share" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5"/><path d="M5 11v10h14V11"/></svg>
+            <svg class="ico-ok" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+          </button>
+        </div>
+        <p class="visually-hidden" id="esito" aria-live="polite"></p>
       </div>
     </section>
 
@@ -303,19 +337,19 @@
       <ul>
         <li>
           <h3>Conformità e due diligence</h3>
-          <p>Audit tecnico-documentale e verifica della situazione urbanistica e catastale dell’immobile, a supporto di compravendite, acquisizioni e operazioni immobiliari.</p>
+          <p>Audit tecnico-documentale e verifica della conformità urbanistica e catastale dell’immobile, a supporto di compravendite, acquisizioni e operazioni immobiliari.</p>
         </li>
         <li>
           <h3>Catasto</h3>
-          <p>Ricostruzione della storia catastale dell’immobile, aggiornamento e allineamento della documentazione agli atti.</p>
+          <p>Ricostruzione storico-catastale dell’immobile, aggiornamento e allineamento della documentazione agli atti.</p>
         </li>
         <li>
           <h3>Regolarizzazioni e condono</h3>
-          <p>Regolarizzazione delle difformità urbanistiche e catastali e assistenza nei procedimenti di condono fino al rilascio della concessione in sanatoria.</p>
+          <p>Regolarizzazione delle difformità urbanistico-edilizie e assistenza nelle pratiche di sanatoria e condono, fino alla conclusione del procedimento.</p>
         </li>
         <li>
           <h3>Trasformazione e valorizzazione</h3>
-          <p>Valutazione di fattibilità, progettazione e direzione lavori per interventi di trasformazione e valorizzazione dell’immobile, fino alla conclusione del procedimento edilizio.</p>
+          <p>Valutazione di fattibilità e assistenza tecnica per interventi di ristrutturazione, trasformazione e valorizzazione dell’immobile, dalla progettazione alla direzione dei lavori.</p>
         </li>
       </ul>
     </section>
@@ -332,5 +366,38 @@
   </div>
 </footer>
 
+<script>
+  (function () {
+    var btn = document.getElementById("condividi");
+    if (!btn) return;
+    var esito = document.getElementById("esito");
+    var url = "https://studio.geometracancia.it/";
+    var dati = {
+      title: "Geom. Lorenzo Cancia",
+      text: "Geom. Lorenzo Cancia · Consulenza e assistenza tecnica · Roma",
+      url: url
+    };
+    function conferma(testo) {
+      btn.classList.add("ok");
+      btn.title = testo;
+      esito.textContent = testo;
+      setTimeout(function () { btn.classList.remove("ok"); btn.title = "Condividi"; esito.textContent = ""; }, 2200);
+    }
+    function copia() {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(function () { conferma("Link copiato"); }, function () { window.prompt("Copia il link:", url); });
+      } else {
+        window.prompt("Copia il link:", url);
+      }
+    }
+    btn.addEventListener("click", function () {
+      if (navigator.share) {
+        navigator.share(dati).catch(function (e) { if (e && e.name !== "AbortError") copia(); });
+      } else {
+        copia();
+      }
+    });
+  })();
+</script>
 </body>
 </html>
